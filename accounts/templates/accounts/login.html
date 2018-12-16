@@ -1,0 +1,24 @@
+{% block page_title %} Login{% endblock %}
+
+{% block extra_css %}
+<style type="text/css">
+    .container > .grid {
+        hight: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            {{ field }}
+            {% if field.errors %}
+                <p>{{ field.errors.0 }}</p>
+            {% endif %}
+        {% endfor %}
+        <input type="submit" value="SIGN IN">
+    </form>
+    <p> New to shift.app? <a href="{% url 'accounts:signup' %}"> Signup Now!</a></p>
+{% endblock %}

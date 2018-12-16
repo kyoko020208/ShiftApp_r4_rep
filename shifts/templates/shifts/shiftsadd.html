@@ -1,0 +1,22 @@
+{% block content %}
+
+<body>
+    <form method="post" action="{% url 'shifts:shiftsadd' %}">
+        {% csrf_token %}
+        <div>
+            <h5>Add Shifts</h5>
+            <button type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div>
+            {{ form.as_p }}
+        </div>
+        <div>
+            <input type="button" value="Close" onClick="location.href='{% url 'shifts:index' %}'">
+            <button type="submit">ADD <i class="fa fa-plus"></i></button>
+        </div>
+    </form>
+</body>
+
+{% endblock %}

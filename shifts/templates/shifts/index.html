@@ -1,0 +1,55 @@
+{% block content %}
+<a href="{% url 'accounts:login' %}">Logout</a>
+<br>
+<br>
+<a href="{% url 'shifts:availability' %}">Availability</a>
+<br>
+<br>
+<a href="{% url 'shifts:index' week.previous.year week.previous.month week.previous.day %}">Last Week</a>
+{{ week.first | date:"Y/m/d" }} ~ {{ week.last | date:"Y/m/d" }}
+<a href="{% url 'shifts:index' week.next.year week.next.month week.next.day %}">Next Week</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            {% for w in week.week_names %}
+            <th>{{ w }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            {% for day in week.days %}
+                {% if week.now == day %}
+                <td class="table-success">
+                {% else %}
+                <td>
+                {% endif %}
+            {% if week.first.month != day.month %}
+                {{ day | date:"m/d" }}
+            {% else %}
+                {{ day.day }}
+            {% endif %}
+            </td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% if not week.schedule_list == None %}
+                {% for day_schedule_list in week.schedule_list %}
+                    <td>
+                        {% for s in day_schedule_list %}
+                            {{ s.start_time }} - {{ s.end_time }} <br>
+                        {% endfor %}
+                    </td>
+                {% endfor %}
+            {% else %}
+                <td>
+                    null
+                </td>
+            {% endif %}
+        </tr>
+</tbody>
+</table>
+<br>
+<a href="{% url 'shifts:shiftsadd' %}">Add</a>
+{% endblock %}
