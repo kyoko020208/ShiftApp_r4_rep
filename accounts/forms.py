@@ -2,6 +2,19 @@ from django import forms
 from .models import UserManager
 from django.core.exceptions import ObjectDoesNotExist
 
+class ManagerStatusForm(forms.Form):
+    CHOICE = {
+        ('1', 'Manager'),
+        ('0', 'Employee'),
+    }
+    is_manager = forms.ChoiceField(widget=forms.Select, choices=CHOICE)
+
+    class Meta:
+        fields = {'is_manager', }
+
+    def clean_is_manager(self):
+        is_manager = self.cleaned_data['is_manager']
+        return is_manager
 
 class SignUpForm(forms.ModelForm):
     """User Signup Form"""
@@ -72,7 +85,6 @@ class SignUpForm(forms.ModelForm):
 
     def save(self, commit=True):
         """hash password and save user info"""
-
         user_info = super(SignUpForm, self).save(commit=False)
         user_info.set_password(self.cleaned_data["password"])
         if commit:

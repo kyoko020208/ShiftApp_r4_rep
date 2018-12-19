@@ -91,9 +91,9 @@ class UserManager(AbstractUser):
 
 
     #Check if he is a manager
-    is_manager = models.BooleanField(
+    is_manager = models.CharField(
         verbose_name='manager status',
-        default=False,
+        max_length=25,
     )
 
     # Check if the account is active

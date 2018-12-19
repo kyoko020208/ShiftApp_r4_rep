@@ -74,7 +74,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sample1',
+        'NAME': 'sample2',
         'USER': 'root',
         'PASSWORD': 'metro181',
         'HOST': 'localhost',
@@ -113,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Universal'
 
 USE_I18N = True
 

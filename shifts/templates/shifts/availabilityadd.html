@@ -1,7 +1,7 @@
 {% block content %}
 
 <body>
-    <form method="post" action="{% url 'shifts:availabilityadd' %}">
+    <form method="post">
         {% csrf_token %}
         <div>
             <h5>Add Availability</h5>
@@ -13,6 +13,7 @@
             {{ form.as_p }}
         </div>
         <div>
+            <input type ="hidden" name="date" value="{{ day }}">
             <input type="button" value="Close" onClick="location.href='{% url 'shifts:availability' %}'">
             <button type="submit">ADD <i class="fa fa-plus"></i></button>
         </div>

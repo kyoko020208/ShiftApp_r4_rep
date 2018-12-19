@@ -56,9 +56,12 @@
                         {{ day.day }}
                     {% endif %}
                     ({{ week_name }})
-                    <a href="{% url 'shifts:availabilityadd' %}">Add</a>
+                    <form method="GET" >
+                       {% csrf_token %}
+                        <div style="display: inline">
+                            {{ form.as_p }}
+                        </div>
                 </td>
-
                 <td>
                     {% for a in day_availability_list %}
                         {{ a.start_time }} - {{ a.end_time }} <br>
@@ -68,5 +71,6 @@
         {% endfor %}
     </tbody>
 </table>
-
+    <button type="submit">SAVE<i class="fa fa-plus"></i></button>
+</form>
 {% endblock %}

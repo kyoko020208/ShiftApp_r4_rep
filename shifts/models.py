@@ -17,7 +17,7 @@ class Schedule(models.Model):
 class Availability(models.Model):
     class Meta:
         db_table = 'availability'
-    available = models.IntegerField()
+    available = models.IntegerField('available', default=1)
     start_time = models.TimeField('start time', default=datetime.time(7, 0, 0))
     end_time = models.TimeField('end time', default=datetime.time(7, 0, 0))
     date = models.DateField('date', default=timezone.now)

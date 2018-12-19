@@ -16,7 +16,7 @@ class ShiftAddForm(forms.ModelForm):
         self.fields['start_time'].auto_focus = True
         self.fields['end_time'].widget.attrs = {'placeholder': 'End Time'}
         self.fields['end_time'].auto_focus = True
-        self.fields['date'].widget.attrs = {'placeholder': 'timezone.now'}
+        #self.fields['date'].widget.attrs = {'placeholder': 'timezone.now'}
 
     def save(self, commit=True):
         shift_info = super(ShiftAddForm, self).save(commit=False)
@@ -37,14 +37,13 @@ class AvailabilityAddForm(forms.ModelForm):
         #available_info = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICE)
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
         super(AvailabilityAddForm, self).__init__(*args, **kwargs)
         self.fields['start_time'].widget.attrs = {'placeholder': 'Start time'}
         self.fields['start_time'].auto_focus = True
         self.fields['end_time'].widget.attrs = {'placeholder': 'End Time'}
         self.fields['end_time'].auto_focus = True
         self.fields['date'].required = True
-        self.fields['date'].widget.attrs = {'placeholder': 'timezone.now'}
+        # self.fields['date'].widget.attrs = {'placeholder': 'timezone.now'}
 
     # def clean(self):
     #     start_time = self.cleaned_data['start_time']

@@ -18,6 +18,7 @@
                 <p>{{ field.errors.0 }}</p>
             {% endif %}
         {% endfor %}
+        <input type = "hidden" name="is_manager" value="{{ is_manager }}">
         <input type="submit" value="SIGN IN">
     </form>
 
