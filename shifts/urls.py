@@ -10,6 +10,6 @@ urlpatterns=[
     path('index/shiftsadd/', views.ShiftAddView.as_view(), name='shiftsadd'),
     path('availability/', views.AvailabilityHomeView.as_view(), name='availability'),
     path('availability/<int:year>/<int:month>/', views.AvailabilityHomeView.as_view(), name='availability'),
-    # path('availability/add/', views.AvailabilityAddView.as_view(), name='availabilityadd'),
-    # path('availability/add/<int:month>/<int:day>/', views.AvailabilityAddView.as_view(), name='availabilityadd'),
+    path('availability/add/', views.AvailabilityAddView.as_view(), name='availabilityadd'),
+    path('availability/add/<int:month>/<int:day>/', views.AvailabilityAddView.as_view(), name='availabilityadd'),
 ]

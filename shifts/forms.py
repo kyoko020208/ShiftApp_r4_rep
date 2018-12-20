@@ -37,6 +37,7 @@ class AvailabilityAddForm(forms.ModelForm):
         #available_info = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICE)
 
     def __init__(self, *args, **kwargs):
+        self._user = kwargs.pop('user')
         super(AvailabilityAddForm, self).__init__(*args, **kwargs)
         self.fields['start_time'].widget.attrs = {'placeholder': 'Start time'}
         self.fields['start_time'].auto_focus = True
@@ -58,6 +59,7 @@ class AvailabilityAddForm(forms.ModelForm):
 
     def save(self, commit=True):
         availability_info = super(AvailabilityAddForm, self).save(commit=False)
+        availability_info.user = self._user
         if commit:
             availability_info.save()
             # UserManager.objects.create(user=user_info)

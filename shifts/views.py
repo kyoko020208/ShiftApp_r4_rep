@@ -160,6 +160,7 @@ class HomeView(WeekWithScheduleMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['week'] = self.get_week_calendar()
+        context['user'] = self.request.user
         return context
 
 
@@ -189,18 +190,14 @@ class ShiftAddView(FormView):
 #     def get(self, request, *args, **kwargs):
 #         return self.post(request, *args, **kwargs)
 
-
 class AvailabilityHomeView(MonthCalendarMixin, WeekWithAvailabilityMixin, generic.TemplateView):
     """home view for availability input"""
     template_name = 'shifts/availability.html'
-    form_class = AvailabilityAddForm
     success_url = reverse_lazy('shifts:availability')
 
     def get_context_data(self, **kwargs):
-        form = AvailabilityAddForm()
         context = super().get_context_data(**kwargs)
         week = self.get_week_calendar()
-        kwargs['user'] = self.request.user
         context['week'] = week
         context['month'] = self.get_month_calendar()
         context['week_row'] = zip(
@@ -208,15 +205,24 @@ class AvailabilityHomeView(MonthCalendarMixin, WeekWithAvailabilityMixin, generi
             week['days'],
             week['availability_list']
         )
-        context['week_days'] = week['days']
-        form.data['date'] = context['week_days']
-        context['form'] = form
+        context['user'] = self.request.user
         return context
 
+
+class AvailabilityAddView(FormView):
+    form_class = AvailabilityAddForm()
+    template_name = 'shifts/availabilityadd.html'
+    success_url = reverse_lazy('shifts:availability')
+
+    def get_form_kwargs(self):
+        kwargs = super(AvailabilityAddView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
     def post(self, request, *args, **kwargs):
-        form = AvailabilityAddForm(request.POST)
+        form = AvailabilityAddForm(request.POST, user=request.user)
         if not form.is_valid():
-            return render(request, 'shifts:availability.html', {'form': form})
+            return render(request, 'shifts:availabilityadd.html', {'form': form})
         availability_save = form.save(commit=False)
         availability_save.save()
         return redirect('shifts:availability')

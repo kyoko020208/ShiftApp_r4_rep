@@ -45,7 +45,7 @@ class SignUpView(View):
         year = today.year
         month = today.month
         day = today.day
-        return redirect('shifts/shifts.html', {'year': year, 'month':month, 'day':day})
+        return redirect('shifts:index')
 
 
 class LoginView(View):
