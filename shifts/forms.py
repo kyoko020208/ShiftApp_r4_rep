@@ -1,7 +1,9 @@
 from django import forms
 from shifts.models import Schedule, Availability
+from accounts.models import UserManager
 from django.utils import timezone
 from accounts.models import UserManager
+import datetime
 
 
 class ShiftAddForm(forms.ModelForm):
@@ -29,6 +31,7 @@ class ShiftAddForm(forms.ModelForm):
 class AvailabilityAddForm(forms.ModelForm):
     class Meta:
         model = Availability
+        model2 = UserManager
         fields = ('start_time', 'end_time', 'available', 'date', )
         CHOICE = {
             ('0', 'OK'),
@@ -43,8 +46,8 @@ class AvailabilityAddForm(forms.ModelForm):
         self.fields['start_time'].auto_focus = True
         self.fields['end_time'].widget.attrs = {'placeholder': 'End Time'}
         self.fields['end_time'].auto_focus = True
-        self.fields['date'].required = True
-        # self.fields['date'].widget.attrs = {'placeholder': 'timezone.now'}
+        #self.fields['date'].required = True
+        self.fields['date'].widget.attrs = {'placeholder': 'timezone.now'}
 
     # def clean(self):
     #     start_time = self.cleaned_data['start_time']

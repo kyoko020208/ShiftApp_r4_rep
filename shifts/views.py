@@ -210,7 +210,7 @@ class AvailabilityHomeView(MonthCalendarMixin, WeekWithAvailabilityMixin, generi
 
 
 class AvailabilityAddView(FormView):
-    form_class = AvailabilityAddForm()
+    form_class = AvailabilityAddForm
     template_name = 'shifts/availabilityadd.html'
     success_url = reverse_lazy('shifts:availability')
 
@@ -222,7 +222,7 @@ class AvailabilityAddView(FormView):
     def post(self, request, *args, **kwargs):
         form = AvailabilityAddForm(request.POST, user=request.user)
         if not form.is_valid():
-            return render(request, 'shifts:availabilityadd.html', {'form': form})
+            return render(request, 'shifts/availabilityadd.html', {'form': form})
         availability_save = form.save(commit=False)
         availability_save.save()
         return redirect('shifts:availability')
