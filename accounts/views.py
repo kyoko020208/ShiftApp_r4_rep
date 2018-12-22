@@ -54,18 +54,12 @@ class LoginView(View, MonthCalendarMixin):
     def post(self, request, *args, **kwargs):
         form = LoginForm(request.POST)
         if not form.is_valid():
-            return render(request, 'accounts/login.html', {'form':form})
+            return render(request, 'accounts/login.html', {'form': form})
 
         #get the user info from the form
         login_user = form.get_login_user()
-
         auth_login(request, login_user)
-
-        # redirect to shift index
-        month = self.kwargs.get('month')
-        year = self.kwargs.get('year')
-        day = self.kwargs.get('day')
-        return redirect(reverse('shifts:index'), {'year': year, 'month': month, 'day':day})
+        return redirect(reverse('shifts:index'))
 
 class LogoutView(LoginRequiredMixin, View):
     """create method for get request"""

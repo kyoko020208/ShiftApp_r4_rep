@@ -12,6 +12,7 @@ from django.core.paginator import Paginator
 from datetime import datetime
 from django.views import generic
 import datetime
+from django.shortcuts import render, redirect, reverse
 
 
 class BaseCalendarMixin:
@@ -155,13 +156,17 @@ class WeekWithAvailabilityMixin(WeekCalendarMixin):
 
 
 class HomeView(WeekWithScheduleMixin, generic.TemplateView):
-    template_name = 'shifts/index.html'
+    #template_name = 'shifts/index.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['week'] = self.get_week_calendar()
         context['user'] = self.request.user
-        return context
+        now = datetime.datetime.today()
+        kwargs['month'] = now.month
+        kwargs['year'] = now.year
+        kwargs['day'] = now.day
+        return context, redirect('shifts:index', kwargs)
 
 
 class ShiftAddView(FormView):
