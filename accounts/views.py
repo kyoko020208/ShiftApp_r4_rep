@@ -4,7 +4,8 @@ from .forms import ManagerStatusForm, SignUpForm, LoginForm
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-import datetime
+from datetime import datetime
+from shifts.views import MonthCalendarMixin
 
 class ManagerStatusView(View):
     def get(self, request):
@@ -40,15 +41,10 @@ class SignUpView(View):
         # #login; save the user data and update the database
         # auth_login(request, user_info_save)
 
-        #redirect to shift index
-        today = datetime.date.today()
-        year = today.year
-        month = today.month
-        day = today.day
-        return redirect('shifts:index')
+        return redirect('accounts:login')
 
 
-class LoginView(View):
+class LoginView(View, MonthCalendarMixin):
     """create method for get request"""
     def get(self, request, *args, **kwargs):
         form = LoginForm()
@@ -64,7 +60,12 @@ class LoginView(View):
         login_user = form.get_login_user()
 
         auth_login(request, login_user)
-        return redirect(reverse('accounts:login'))
+
+        # redirect to shift index
+        month = self.kwargs.get('month')
+        year = self.kwargs.get('year')
+        day = self.kwargs.get('day')
+        return redirect(reverse('shifts:index'), {'year': year, 'month': month, 'day':day})
 
 class LogoutView(LoginRequiredMixin, View):
     """create method for get request"""
