@@ -1,18 +1,8 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.views.generic import View
 import calendar
 from collections import deque
 from shifts.models import Schedule, Availability
-from django.views.generic import ListView, FormView, DeleteView
-from django.contrib import messages
-from .forms import ShiftAddForm, AvailabilityAddForm
-from django.urls import reverse_lazy
-from django.core.paginator import Paginator
 from datetime import datetime
-from django.views import generic
 import datetime
-from django.shortcuts import render, redirect, reverse
 
 
 class BaseCalendarMixin:
@@ -32,6 +22,7 @@ class BaseCalendarMixin:
         week_names = deque(self.week_names)
         week_names.rotate(-self.first_weekday)
         return week_names
+
 
 class MonthCalendarMixin(BaseCalendarMixin):
     """Base class for monthly calendar"""
@@ -107,7 +98,7 @@ class WeekCalendarMixin(BaseCalendarMixin):
         calendar_data = {
             'now': datetime.date.today(),
             'days': days,
-            'previous':first - datetime.timedelta(days=7),
+            'previous': first - datetime.timedelta(days=7),
             'next': first + datetime.timedelta(days=7),
             'week_names': self.get_week_names(),
             'first': first,
@@ -115,9 +106,9 @@ class WeekCalendarMixin(BaseCalendarMixin):
         }
         return calendar_data
 
+
 class WeekWithScheduleMixin(WeekCalendarMixin):
     """Edit shift in the week calendar"""
-    model = Schedule
     date_field = 'date'
     order_field = 'start_time'
 
@@ -134,6 +125,7 @@ class WeekWithScheduleMixin(WeekCalendarMixin):
         schedules = self.get_week_schedules(calendar_data['days'])
         calendar_data['schedule_list'] = schedules
         return calendar_data
+
 
 class WeekWithAvailabilityMixin(WeekCalendarMixin):
     model = Availability
@@ -154,80 +146,3 @@ class WeekWithAvailabilityMixin(WeekCalendarMixin):
         calendar_data['availability_list'] = availabilities
         return calendar_data
 
-
-class HomeView(WeekWithScheduleMixin, generic.TemplateView):
-    #template_name = 'shifts/index.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['week'] = self.get_week_calendar()
-        context['user'] = self.request.user
-        now = datetime.datetime.today()
-        kwargs['month'] = now.month
-        kwargs['year'] = now.year
-        kwargs['day'] = now.day
-        return context, redirect('shifts:index', kwargs)
-
-
-class ShiftAddView(FormView):
-    form_class = ShiftAddForm
-    template_name = 'shifts/shiftsadd.html'
-    success_url = reverse_lazy('shifts:index')
-
-    def get_form_kwargs(self):
-        #kwargs=dictionary
-        kwargs = super(ShiftAddView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
-
-    def post(self, request, *args, **kwargs):
-        form = ShiftAddForm(request.POST, user=request.user)
-        if not form.is_valid():
-            return render(request, 'shifts/shiftsadd.html', {'form': form})
-        form.save(commit=True)
-        messages.success(request, "change has been saved")
-        return redirect('shifts:index')
-
-# class ShiftDeleteView(DeleteView):
-#     model = Schedule
-#     success_url = reverse_lazy('shifts:index')
-#
-#     def get(self, request, *args, **kwargs):
-#         return self.post(request, *args, **kwargs)
-
-class AvailabilityHomeView(MonthCalendarMixin, WeekWithAvailabilityMixin, generic.TemplateView):
-    """home view for availability input"""
-    template_name = 'shifts/availability.html'
-    success_url = reverse_lazy('shifts:availability')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        week = self.get_week_calendar()
-        context['week'] = week
-        context['month'] = self.get_month_calendar()
-        context['week_row'] = zip(
-            week['week_names'],
-            week['days'],
-            week['availability_list']
-        )
-        context['user'] = self.request.user
-        return context
-
-
-class AvailabilityAddView(FormView):
-    form_class = AvailabilityAddForm
-    template_name = 'shifts/availabilityadd.html'
-    success_url = reverse_lazy('shifts:availability')
-
-    def get_form_kwargs(self):
-        kwargs = super(AvailabilityAddView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
-
-    def post(self, request, *args, **kwargs):
-        form = AvailabilityAddForm(request.POST, user=request.user)
-        if not form.is_valid():
-            return render(request, 'shifts/availabilityadd.html', {'form': form})
-        availability_save = form.save(commit=False)
-        availability_save.save()
-        return redirect('shifts:availability')

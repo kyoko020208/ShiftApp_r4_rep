@@ -38,7 +38,8 @@
                 {% for day_schedule_list in week.schedule_list %}
                     <td>
                         {% for s in day_schedule_list %}
-                            {{ s.start_time }} - {{ s.end_time }} <br>
+                            {{ s.start_time }} - {{ s.end_time }}
+                            <a href="{% url 'shifts:assign' s.schedule_id %}">Add</a><br>
                         {% endfor %}
                     </td>
                 {% endfor %}
@@ -48,8 +49,13 @@
                 </td>
             {% endif %}
         </tr>
-</tbody>
+    </tbody>
+</table>
+<table>
+    <thead>
+        {% alluser in
+    </thead>
 </table>
 <br>
-<a href="{% url 'shifts:shiftsadd' %}">Add</a>
+<a href="{% url 'shifts:shiftsadd' %}">Shift Add</a>
 {% endblock %}

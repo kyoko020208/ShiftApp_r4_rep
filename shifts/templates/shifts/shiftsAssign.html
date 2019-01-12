@@ -1,0 +1,16 @@
+{% block content %}
+
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            {{ form.as_p }}
+        </div>
+        <div>
+            <input type="button" value="Close" onClick="location.href='{% url 'shifts:availability' %}'">
+            <button type="submit">ADD </button>
+        </div>
+    </form>
+</body>
+
+{% endblock %}

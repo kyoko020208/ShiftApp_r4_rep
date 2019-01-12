@@ -11,9 +11,9 @@
     }
 </style>
 <br>
-<a href="{% url 'shifts:availability' month.previous.year month.previous.month %}">Last Month</a>
+<a href="{% url 'shifts:availability' year=month.previous.year month=month.previous.month %}">Last Month</a>
 {{ month.current | date:"Y/m" }}
-<a href="{% url 'shifts:availability' month.next.year month.next.month %}">Next Month</a>
+<a href="{% url 'shifts:availability' year=month.next.year month=month.next.month %}">Next Month</a>
 
 <br>
 <table class="table">
@@ -34,9 +34,9 @@
             <td>
           {% endif %}
           {% if month.current.month != day.month %}
-            {{ day | date:"m/d" }}
+             <a href="{% url 'shifts:availability' day.year day.month day.day %}">{{ day | date:"m/d" }}</a>
           {% else %}
-            {{ day.day }}
+          <a href="{% url 'shifts:availability' day.year day.month day.day %}">{{ day.day }}</a>
           {% endif %}
           </td>
         {% endfor %}
@@ -47,7 +47,7 @@
 <br><br>
 <table class="table table-bordered">
     <tbody>
-        {% for week_name, day, day_availability_list in week_row %}
+        {% for week_name, day, day_schedule_list in week_row %}
             <tr>
                 <td>
                     {% if week.first.month != day.month %}
@@ -56,7 +56,6 @@
                         {{ day.day }}
                     {% endif %}
                     ({{ week_name }})
-
                 </td>
                 <td>
                     {% for a in day_availability_list %}
