@@ -14,5 +14,5 @@ urlpatterns=[
     path('availability/add/', mobileapp.AvailabilityAddView.as_view(), name='availabilityadd'),
     path('availability/add/<int:month>/<int:day>/', mobileapp.AvailabilityAddView.as_view(), name='availabilityadd'),
     path('assign/', mobileapp.ShiftsAssignView.as_view(), name='assign'),
-    path('assign/<int:shift_id>/', mobileapp.ShiftsAssignView.as_view(), name='assign'),
+    path('assign/<int:schedule_id>/', mobileapp.ShiftsAssignView.as_view(), name='assign'),
 ]

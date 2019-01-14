@@ -34,8 +34,8 @@ class Availability(models.Model):
 class Shifts(models.Model):
     class Meta:
         db_table = 'shifts'
-    shift = models.ForeignKey(Schedule, on_delete=models.PROTECT)
-    assigned_user = models.ForeignKey(UserManager, on_delete=models.PROTECT)
+    schedule = models.ForeignKey(Schedule, on_delete=models.PROTECT)
+    assigned_user = models.CharField('assgined_user', default="", max_length=30)
     created_at = models.DateField('date modified', default=timezone.now)
 
     def __str__(self):

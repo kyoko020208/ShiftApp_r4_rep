@@ -99,15 +99,15 @@ class ShiftsAssignView(FormView):
 
     def get_form_kwargs(self):
         kwargs = super(ShiftsAssignView, self).get_form_kwargs()
-        kwargs['shift'] = self.kwargs.get('shift_id')
+        kwargs['schedule'] = self.kwargs.get('schedule_id')
         return kwargs
 
     def post(self, request, *args, **kwargs):
-        form = ShiftAssignForm(request.POST)
+        form = ShiftAssignForm(request.POST, schedule=self.kwargs.get('schedule_id'))
         if not form.is_valid():
-            return render(request, 'shifts/shiftsAssign.html', {'form': form})
+            return render(request, 'shifts/shiftsAssign.html', {'form': form, 'schedule':self.kwargs.get('schedule_id')})
         shifts_save = form.save(commit=False)
-        shifts_save.shift = self.kwargs.get('shift_id')
+        shifts_save.schedule = self.kwargs.get('schedule_id')
         shifts_save.save()
         return redirect('shifts:assign')
 

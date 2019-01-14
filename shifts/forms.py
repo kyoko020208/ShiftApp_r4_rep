@@ -75,18 +75,18 @@ class ShiftAssignForm(forms.ModelForm):
         fields = {'assigned_user', }
 
     def __init__(self, *args, **kwargs):
+        self._schedule = kwargs.pop('schedule')
         first_name_group = UserManager.objects.values_list('first_name', flat=True)
         user_id_group = UserManager.objects.values_list('user_id', flat=True)
         CHOICE = []
         for value, key in zip(first_name_group, user_id_group):
              CHOICE.append((key, value))
-        self._shift = kwargs.pop('shift')
         super(ShiftAssignForm, self).__init__(*args, **kwargs)
         self.fields['assigned_user'] = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICE)
 
     def save(self, commit=True):
         shiftsassign = super(ShiftAssignForm, self).save(commit=False)
-        shiftsassign.shift = self._shift
+        shiftsassign.schedule = self._schedule
         if commit:
             shiftsassign.save()
 
