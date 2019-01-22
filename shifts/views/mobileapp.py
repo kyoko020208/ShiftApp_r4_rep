@@ -8,6 +8,7 @@ from django.views import generic
 import datetime
 from django.shortcuts import render, redirect
 from accounts.models import UserManager
+from shifts.models import Availability, Schedule
 
 
 
@@ -22,13 +23,11 @@ class HomeView(WeekWithScheduleMixin, WeekWithAvailabilityMixin, generic.Templat
         context['week_row'] = zip(
             week['week_names'],
             week['days'],
-            week['schedule_list']
+            week['schedule_list'],
+            week['availability_list']
         )
+        context['username'] = UserManager.objects.values_list('username', flat=True)
         return context
-
-    def post(self, request):
-        return redirect(request, 'shifts:assign')
-
 
 class ShiftAddView(FormView):
     form_class = ShiftAddForm
@@ -63,7 +62,7 @@ class AvailabilityHomeView(MonthCalendarMixin, WeekWithAvailabilityMixin, generi
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         week = self.get_week_calendar()
-        context['week'] = week
+        context['week'] = self.get_week_calendar()
         context['month'] = self.get_month_calendar()
         context['week_row'] = zip(
             week['week_names'],
@@ -102,12 +101,14 @@ class ShiftsAssignView(FormView):
         kwargs['schedule'] = self.kwargs.get('schedule_id')
         return kwargs
 
+    def get_suggestion(self):
+        queryset = Schedule.objects
+
     def post(self, request, *args, **kwargs):
         form = ShiftAssignForm(request.POST, schedule=self.kwargs.get('schedule_id'))
         if not form.is_valid():
             return render(request, 'shifts/shiftsAssign.html', {'form': form, 'schedule':self.kwargs.get('schedule_id')})
         shifts_save = form.save(commit=False)
-        shifts_save.schedule = self.kwargs.get('schedule_id')
         shifts_save.save()
-        return redirect('shifts:assign')
+        return redirect('shifts:index')
 

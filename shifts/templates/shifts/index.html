@@ -9,9 +9,10 @@
 {{ week.first | date:"Y/m/d" }} ~ {{ week.last | date:"Y/m/d" }}
 <a href="{% url 'shifts:index' week.next.year week.next.month week.next.day %}">Next Week</a>
 
-<table class="table table-bordered">
+<table border="1" width="800" cellpadding="10">
     <thead>
         <tr>
+            <th></th>
             {% for w in week.week_names %}
             <th>{{ w }}</th>
             {% endfor %}
@@ -19,6 +20,7 @@
     </thead>
     <tbody>
         <tr>
+            <td></td>
             {% for day in week.days %}
                 {% if week.now == day %}
                 <td class="table-success">
@@ -34,27 +36,30 @@
             {% endfor %}
         </tr>
         <tr>
-            {% if not week.schedule_list == None %}
-                {% for day_schedule_list in week.schedule_list %}
-                    <td>
-                        {% for s in day_schedule_list %}
-                            {{ s.start_time }} - {{ s.end_time }}
-                            <a href="{% url 'shifts:assign' s.schedule_id %}">Add</a><br>
-                        {% endfor %}
-                    </td>
+            <td>shifts</td>
+            {% for day_schedule_list in week.schedule_list %}
+            <td>
+                {% for s in day_schedule_list %}
+                {{ s.start_time }} - {{ s.end_time }}
+                <a href="{% url 'shifts:assign' s.schedule_id %}">Add</a><br>
                 {% endfor %}
-            {% else %}
-                <td>
-                    null
-                </td>
-            {% endif %}
+            </td>
+            {% endfor %}
+
         </tr>
+        {% for users in username %}
+            <tr>
+                <td>{{ users }}</td>
+                    {% for day_availability_list in week.availability_list %}
+                        {% for s in day_availability_list %}
+                            {% if s.user == users %}
+                            <td>{{ s.start_time }} - {{ s.end_time }}<br></td>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+            </tr>
+        {% endfor %}
     </tbody>
-</table>
-<table>
-    <thead>
-        {% alluser in
-    </thead>
 </table>
 <br>
 <a href="{% url 'shifts:shiftsadd' %}">Shift Add</a>

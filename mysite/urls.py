@@ -9,5 +9,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('shifts/', include('shifts.urls')),
     path('accounts/', include('accounts.urls')),
-    path('api/', include('api_router.urls')),
+    path('api/', include(api_router.urls)),
 ]

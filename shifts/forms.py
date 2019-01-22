@@ -85,8 +85,9 @@ class ShiftAssignForm(forms.ModelForm):
         self.fields['assigned_user'] = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICE)
 
     def save(self, commit=True):
+        schedule = Schedule.objects.get(schedule_id=self._schedule)
         shiftsassign = super(ShiftAssignForm, self).save(commit=False)
-        shiftsassign.schedule = self._schedule
+        shiftsassign.schedule = schedule
         if commit:
             shiftsassign.save()
 
